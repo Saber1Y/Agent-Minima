@@ -1,9 +1,10 @@
-node_modules/
-.next/
 *.tsbuildinfo
-next-env.d.ts
 .env
 .env.local
-out/
-circuits/target/
+.next/
 circuits/Proof.toml
+circuits/target/
+data/audit.db
+next-env.d.ts
+node_modules/
+out/

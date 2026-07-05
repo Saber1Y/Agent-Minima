@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       request: request || "",
       scenario: request?.includes("email") ? "overbroad" : "legitimate",
       decision: decision || "accepted",
-      disclosedClaims: (disclosedClaims || []).join(", "),
+      disclosedClaims: Array.isArray(disclosedClaims) ? disclosedClaims.join(", ") : (disclosedClaims || ""),
       proofHash: proof.proofHash,
       txHash: null,
     });

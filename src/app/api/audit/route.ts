@@ -3,7 +3,10 @@ import { getAllEntries } from "@/lib/store";
 
 export async function GET() {
   try {
-    const entries = getAllEntries();
+    const entries = getAllEntries().map((e) => ({
+      ...e,
+      disclosedClaims: e.disclosedClaims ? e.disclosedClaims.split(", ") : [],
+    }));
     return NextResponse.json(entries);
   } catch (err) {
     const message = err instanceof Error ? err.message : "unknown error";

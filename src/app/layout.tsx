@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import PrivyWrapper from "@/components/PrivyWrapper";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sora.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-surface text-white antialiased font-sans">
-        {children}
+        <PrivyWrapper>{children}</PrivyWrapper>
       </body>
     </html>
   );
