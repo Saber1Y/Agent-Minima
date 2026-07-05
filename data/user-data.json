@@ -1,0 +1,17 @@
+{
+  "name": "Alex Chen",
+  "age": 25,
+  "date_of_birth": "2001-03-15",
+  "email": "alex.chen@example.com",
+  "phone": "+1-555-0192",
+  "government_id": "PASS-USA-48291",
+  "address": {
+    "street": "742 Market Street",
+    "city": "San Francisco",
+    "state": "CA",
+    "zip": "94102"
+  },
+  "token_balance": 500,
+  "credit_score": 720,
+  "wallet_address": "0x3F5b96A494061F7338Da529e3047809Ac6a7FB84"
+}
