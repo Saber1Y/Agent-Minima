@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { BrowserProvider, JsonRpcSigner } from "ethers";
+import { BrowserProvider } from "ethers";
 
 export interface WalletState {
   address: string | null;
   chainId: number | null;
-  signer: JsonRpcSigner | null;
   isConnecting: boolean;
   error: string | null;
 }
@@ -15,13 +14,13 @@ export function useWallet() {
   const [state, setState] = useState<WalletState>({
     address: null,
     chainId: null,
-    signer: null,
     isConnecting: false,
     error: null,
   });
 
   const connect = useCallback(async () => {
-    if (!window.ethereum) {
+    const eth = window.ethereum;
+    if (!eth?.request) {
       setState((s) => ({ ...s, error: "No wallet found. Install MetaMask." }));
       return;
     }
@@ -29,15 +28,20 @@ export function useWallet() {
     setState((s) => ({ ...s, isConnecting: true, error: null }));
 
     try {
-      const provider = new BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
+      const accounts: string[] = await eth.request({
+        method: "eth_requestAccounts",
+      });
+
+      if (!accounts?.[0]) {
+        throw new Error("No accounts returned");
+      }
+
+      const provider = new BrowserProvider(eth);
       const network = await provider.getNetwork();
 
       setState({
         address: accounts[0],
         chainId: Number(network.chainId),
-        signer,
         isConnecting: false,
         error: null,
       });
@@ -54,7 +58,6 @@ export function useWallet() {
     setState({
       address: null,
       chainId: null,
-      signer: null,
       isConnecting: false,
       error: null,
     });
@@ -65,16 +68,11 @@ export function useWallet() {
     if (!eth?.on) return;
 
     const handleAccountsChanged = (accounts: string[]) => {
-      if (accounts.length === 0) {
-        disconnect();
-      } else {
-        connect();
-      }
+      if (accounts.length === 0) disconnect();
+      else connect();
     };
 
-    const handleChainChanged = () => {
-      connect();
-    };
+    const handleChainChanged = () => connect();
 
     eth.on("accountsChanged", handleAccountsChanged);
     eth.on("chainChanged", handleChainChanged);
