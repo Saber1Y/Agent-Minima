@@ -5,6 +5,7 @@ import DemoHeader from "@/components/DemoHeader";
 import ScenarioSelector from "@/components/ScenarioSelector";
 import RequestPanel from "@/components/RequestPanel";
 import FlowTimeline, { type Stage } from "@/components/FlowTimeline";
+import AuditLog from "@/components/AuditLog";
 import type { ReasonResult } from "@/components/ReasonStage";
 import type { ProofResult } from "@/components/ProofStage";
 import type { ActionResult } from "@/components/ActionStage";
@@ -26,6 +27,7 @@ export default function DemoPage() {
   const [proofLoading, setProofLoading] = useState(false);
   const [actionResult, setActionResult] = useState<ActionResult | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [auditLogKey, setAuditLogKey] = useState(0);
 
   const handleScenario = useCallback((id: string, text: string) => {
     setScenario(id);
@@ -103,6 +105,7 @@ export default function DemoPage() {
       setActionResult(actionData);
       setActionLoading(false);
       setStage("done");
+      setAuditLogKey((k) => k + 1);
     } catch {
       setProofLoading(false);
       setActionLoading(false);
@@ -151,6 +154,8 @@ export default function DemoPage() {
             actionLoading={actionLoading}
           />
         )}
+
+        <AuditLog refreshKey={auditLogKey} />
       </main>
     </div>
   );
