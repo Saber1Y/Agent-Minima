@@ -12,7 +12,7 @@ import type { ProofResult } from "@/components/ProofStage";
 import type { ActionResult } from "@/components/ActionStage";
 
 export default function DemoPage() {
-  const { address, isConnecting, connect } = useWallet();
+  const { address, isConnecting, error: walletError, connect } = useWallet();
   const [scenario, setScenario] = useState("legitimate");
   const [requestText, setRequestText] = useState(
     "Can this user access our DAO governance? I need to verify they are over 18 and hold at least 100 governance tokens."
@@ -140,7 +140,12 @@ export default function DemoPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <DemoHeader onReset={handleReset} />
+      <DemoHeader
+        onReset={handleReset}
+        address={address}
+        isConnecting={isConnecting}
+        onConnect={connect}
+      />
       <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-6">
         {!address ? (
           <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center">
@@ -151,6 +156,20 @@ export default function DemoPage() {
               <span className="text-white"> one message</span> to set up a session key
               — after that, Minima handles everything without popups.
             </p>
+            {walletError && (
+              <p className="text-xs text-danger mb-4 max-w-md bg-danger/10 p-3 rounded-lg">
+                {walletError}
+              </p>
+            )}
+            {typeof window !== "undefined" && !window.ethereum && (
+              <p className="text-xs text-amber-400 mb-4 max-w-md bg-amber-500/10 p-3 rounded-lg">
+                No wallet extension detected. Install{" "}
+                <a href="https://metamask.io" target="_blank" rel="noopener noreferrer" className="underline">
+                  MetaMask
+                </a>{" "}
+                or another Web3 wallet.
+              </p>
+            )}
             <button
               onClick={connect}
               disabled={isConnecting}

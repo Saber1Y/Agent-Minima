@@ -1,9 +1,16 @@
 import Link from "next/link";
-import { useWallet } from "@/lib/useWallet";
 
-export default function DemoHeader({ onReset }: { onReset: () => void }) {
-  const { address, isConnecting, connect } = useWallet();
-
+export default function DemoHeader({
+  onReset,
+  address,
+  isConnecting,
+  onConnect,
+}: {
+  onReset: () => void;
+  address: string | null;
+  isConnecting: boolean;
+  onConnect: () => void;
+}) {
   return (
     <header className="flex items-center justify-between border-b border-border px-6 py-4">
       <div className="flex items-center gap-4">
@@ -23,7 +30,7 @@ export default function DemoHeader({ onReset }: { onReset: () => void }) {
           </span>
         ) : (
           <button
-            onClick={connect}
+            onClick={onConnect}
             disabled={isConnecting}
             className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted transition hover:border-white hover:text-white disabled:opacity-50"
           >
