@@ -1,4 +1,5 @@
 export interface ProofResult {
+  proofData: string;
   proofHash: string;
   publicInputs: string[];
 }

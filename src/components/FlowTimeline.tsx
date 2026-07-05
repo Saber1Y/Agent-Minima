@@ -89,16 +89,12 @@ export default function FlowTimeline({
 
       <div className="space-y-2">
         {(stage === "reasoning" || stage === "deciding" || stage === "proving" || stage === "acting" || stage === "done") && (
-          <>
-            {stage !== "idle" && (
-              <div>
-                <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
-                  Reasoning
-                </p>
-                <ReasonStage result={reasonResult} loading={reasonLoading} />
-              </div>
-            )}
-          </>
+          <div>
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted">
+              Reasoning
+            </p>
+            <ReasonStage result={reasonResult} loading={reasonLoading} />
+          </div>
         )}
 
         {(stage === "deciding" || stage === "proving" || stage === "acting" || stage === "done") && (
