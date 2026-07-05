@@ -1,0 +1,5 @@
+age_threshold = "18"
+token_threshold = "100"
+user_address = "42"
+age = "25"
+token_balance = "500"
