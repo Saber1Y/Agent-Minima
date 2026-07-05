@@ -88,7 +88,11 @@ export default function DemoPage() {
       const proofRes = await fetch("/api/prove", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ request: text }),
+        body: JSON.stringify({
+          request: text,
+          decision: accepted ? "accepted" : "rejected",
+          disclosedClaims: reasonResult?.minimalClaims || [],
+        }),
       });
       const proofData: ProofResult = await proofRes.json();
       setProofResult(proofData);
@@ -99,7 +103,10 @@ export default function DemoPage() {
       const actionRes = await fetch("/api/execute", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ proofHash: proofData.proofHash }),
+        body: JSON.stringify({
+          proofData: proofData.proofData,
+          publicInputs: proofData.publicInputs,
+        }),
       });
       const actionData: ActionResult = await actionRes.json();
       setActionResult(actionData);
