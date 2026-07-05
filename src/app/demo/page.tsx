@@ -110,10 +110,14 @@ export default function DemoPage() {
         const data: ReasonResult = await res.json();
         setReasonResult(data);
 
+        for (const claim of data.minimalClaims) {
+          addLog("accept", `${claim}  (required)`);
+        }
+        for (const claim of data.excessiveClaims) {
+          addLog("reject", `${claim}`);
+        }
+
         if (!data.accepted) {
-          for (const claim of data.excessiveClaims) {
-            addLog("reject", `${claim} — not required`);
-          }
           if (data.minimalClaims.length > 0) {
             addLog(
               "reason",
@@ -128,9 +132,6 @@ export default function DemoPage() {
           );
           setShowCounterOffer(true);
         } else {
-          for (const claim of data.minimalClaims) {
-            addLog("accept", `${claim}  (required)`);
-          }
           addLog("accept", "Request accepted — proceeding…");
           await proveAndAct(text, data.minimalClaims);
         }
