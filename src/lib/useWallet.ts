@@ -46,15 +46,23 @@ export function useWallet() {
         error: null,
       });
     } catch (err) {
-      const msg =
+      const rawMsg =
         typeof err === "object" && err !== null
           ? ((err as Record<string, unknown>).message as string) || JSON.stringify(err)
           : String(err);
       console.error("Wallet connect error:", err);
+      const friendly =
+        rawMsg.includes("No active wallet found") || rawMsg.includes("locked")
+          ? "MetaMask is locked. Open the extension, unlock it, then try again."
+          : rawMsg.includes("rejected") || rawMsg.includes("denied")
+            ? "Connection rejected. Click Connect to try again."
+            : rawMsg.includes("-32002")
+              ? "A pending MetaMask request is in progress. Open the extension to complete it."
+              : rawMsg;
       setState((s) => ({
         ...s,
         isConnecting: false,
-        error: msg,
+        error: friendly,
       }));
     }
   }, []);

@@ -177,6 +177,9 @@ export default function DemoPage() {
             >
               {isConnecting ? "Connecting..." : "Connect wallet"}
             </button>
+            <p className="text-[11px] text-muted mt-4">
+              Make sure MetaMask is unlocked and you&apos;re on the right network.
+            </p>
           </div>
         ) : (
           <>
