@@ -3,43 +3,53 @@ import Link from "next/link";
 export default function DemoHeader({
   onReset,
   address,
-  isConnecting,
   onConnect,
+  onLogout,
 }: {
   onReset: () => void;
   address: string | null;
-  isConnecting: boolean;
   onConnect: () => void;
+  onLogout: () => void;
 }) {
   return (
-    <header className="flex items-center justify-between border-b border-border px-6 py-4">
+    <header className="flex items-center justify-between border-b border-border px-4 py-3 lg:px-6 lg:py-4">
       <div className="flex items-center gap-4">
         <Link
           href="/"
-          className="text-sm text-muted transition hover:text-white"
+          className="text-xs text-muted transition hover:text-white font-sans"
         >
           ← Back
         </Link>
-        <h1 className="text-lg font-semibold">Minima Demo</h1>
+        <h1 className="font-sans text-lg font-semibold tracking-tight">
+          Minima
+          <span className="ml-1.5 text-xs font-normal text-muted">Demo</span>
+        </h1>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         {address ? (
-          <span className="flex items-center gap-2 rounded-lg border border-accent/30 bg-accent/5 px-3 py-1.5 text-xs font-mono text-accent">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            {address.slice(0, 6)}...{address.slice(-4)}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="flex items-center gap-1.5 rounded-md border border-accent/30 bg-accent/5 px-2.5 py-1 font-mono text-[11px] text-accent">
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+              {address.slice(0, 6)}…{address.slice(-4)}
+            </span>
+            <button
+              onClick={onLogout}
+              className="rounded-md border border-border px-2 py-1 text-[11px] text-muted transition hover:text-white font-sans"
+            >
+              Disconnect
+            </button>
+          </div>
         ) : (
           <button
             onClick={onConnect}
-            disabled={isConnecting}
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted transition hover:border-white hover:text-white disabled:opacity-50"
+            className="rounded-md border border-border px-3 py-1 text-xs text-muted transition hover:border-white hover:text-white font-sans"
           >
-            {isConnecting ? "Connecting..." : "Connect wallet"}
+            Connect
           </button>
         )}
         <button
           onClick={onReset}
-          className="rounded-md border border-border px-3 py-1.5 text-sm text-muted transition hover:border-white hover:text-white"
+          className="rounded-md border border-border px-2 py-1 text-[11px] text-muted transition hover:text-white font-sans"
         >
           Reset
         </button>
