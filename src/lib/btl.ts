@@ -7,7 +7,7 @@ export interface ReasonResponse {
 
 const BTL_ENDPOINT = process.env.BTL_ENDPOINT || "https://runtime.badtheorylabs.com/api/v1/chat/completions";
 const BTL_API_KEY = process.env.BTL_API_KEY || "";
-const BTL_MODEL = process.env.BTL_MODEL || "btl-2";
+const BTL_MODEL = process.env.BTL_MODEL || "deepseek-chat-v3";
 
 const SYSTEM_PROMPT = `You are a disclosure policy agent. Your job is to analyze access requests and determine:
 1. The minimum set of claims needed to satisfy the request
@@ -45,5 +45,10 @@ export async function reason(request: string): Promise<ReasonResponse> {
   const content = body.choices?.[0]?.message?.content;
   if (!content) throw new Error("BTL: no content in response");
 
-  return JSON.parse(content) as ReasonResponse;
+  const cleaned = content
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  return JSON.parse(cleaned) as ReasonResponse;
 }
