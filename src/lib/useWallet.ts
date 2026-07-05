@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { BrowserProvider } from "ethers";
 
 export interface WalletState {
   address: string | null;
@@ -28,28 +27,34 @@ export function useWallet() {
     setState((s) => ({ ...s, isConnecting: true, error: null }));
 
     try {
-      const accounts: string[] = await eth.request({
+      const accounts: unknown = await eth.request({
         method: "eth_requestAccounts",
       });
 
-      if (!accounts?.[0]) {
+      const address = Array.isArray(accounts) ? (accounts[0] as string) : null;
+      if (!address) {
         throw new Error("No accounts returned");
       }
 
-      const provider = new BrowserProvider(eth);
-      const network = await provider.getNetwork();
+      const chainHex: unknown = await eth.request({ method: "eth_chainId" });
+      const chainId = Number(chainHex);
 
       setState({
-        address: accounts[0],
-        chainId: Number(network.chainId),
+        address,
+        chainId,
         isConnecting: false,
         error: null,
       });
     } catch (err) {
+      const msg =
+        typeof err === "object" && err !== null
+          ? ((err as Record<string, unknown>).message as string) || JSON.stringify(err)
+          : String(err);
+      console.error("Wallet connect error:", err);
       setState((s) => ({
         ...s,
         isConnecting: false,
-        error: err instanceof Error ? err.message : "Failed to connect",
+        error: msg,
       }));
     }
   }, []);
@@ -67,7 +72,8 @@ export function useWallet() {
     const eth = window.ethereum;
     if (!eth?.on) return;
 
-    const handleAccountsChanged = (accounts: string[]) => {
+    const handleAccountsChanged = (accs: unknown) => {
+      const accounts = Array.isArray(accs) ? accs : [];
       if (accounts.length === 0) disconnect();
       else connect();
     };
