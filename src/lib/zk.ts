@@ -4,6 +4,8 @@ import fs from "fs";
 import crypto from "crypto";
 
 const CIRCUITS_DIR = path.join(process.cwd(), "circuits");
+const NARGO = process.env.NARGO_PATH || "/Users/mac/.nargo/bin/nargo";
+const BB = process.env.BB_PATH || "/Users/mac/.bb/bb";
 
 export interface ProofOutput {
   proofData: string; // hex-encoded proof bytes
@@ -29,12 +31,17 @@ export async function generateProof(
 
   fs.writeFileSync(path.join(CIRCUITS_DIR, "Prover.toml"), proverToml);
 
-  execSync("nargo execute", { cwd: CIRCUITS_DIR, stdio: "pipe" });
+  execSync(`${NARGO} execute`, { cwd: CIRCUITS_DIR, stdio: "pipe" });
 
-  const output = execSync(
-    `bb prove --bytecode_path target/agent_minima.json --witness_path target/agent_minima.gz -o ./target`,
+  execSync(
+    `${BB} write_vk --bytecode_path target/agent_minima.json -o ./target --verifier_target evm --scheme ultra_honk`,
     { cwd: CIRCUITS_DIR, stdio: "pipe" }
-  ).toString();
+  );
+
+  execSync(
+    `${BB} prove --bytecode_path target/agent_minima.json --witness_path target/agent_minima.gz -o ./target --verifier_target evm --scheme ultra_honk`,
+    { cwd: CIRCUITS_DIR, stdio: "pipe" }
+  );
 
   const proofHex = fs
     .readFileSync(path.join(CIRCUITS_DIR, "target/proof"))

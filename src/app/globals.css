@@ -2,6 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   @apply bg-surface text-white antialiased;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  @apply bg-accent/30 text-white;
+}
+
+.scroll-hidden {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scroll-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -20%, rgba(45, 212, 191, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 80% 80%, rgba(45, 212, 191, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 40% at 20% 70%, rgba(45, 212, 191, 0.03) 0%, transparent 50%);
+}
+
+.hero-grid {
+  background-image: linear-gradient(rgba(45, 212, 191, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45, 212, 191, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.circuit-line {
+  stroke-dasharray: 4 4;
+  animation: dashMove 20s linear infinite;
+}
+
+@keyframes dashMove {
+  to {
+    stroke-dashoffset: -80;
+  }
+}
+
+.glow-dot {
+  box-shadow: 0 0 8px rgba(45, 212, 191, 0.6), 0 0 20px rgba(45, 212, 191, 0.2);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.card-border {
+  position: relative;
+}
+
+.card-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(45, 212, 191, 0.15),
+    transparent 40%,
+    transparent 60%,
+    rgba(45, 212, 191, 0.05)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }

@@ -6,11 +6,13 @@ import ScenarioSelector from "@/components/ScenarioSelector";
 import RequestPanel from "@/components/RequestPanel";
 import FlowTimeline, { type Stage } from "@/components/FlowTimeline";
 import AuditLog from "@/components/AuditLog";
+import { useWallet } from "@/lib/useWallet";
 import type { ReasonResult } from "@/components/ReasonStage";
 import type { ProofResult } from "@/components/ProofStage";
 import type { ActionResult } from "@/components/ActionStage";
 
 export default function DemoPage() {
+  const { address, isConnecting, connect } = useWallet();
   const [scenario, setScenario] = useState("legitimate");
   const [requestText, setRequestText] = useState(
     "Can this user access our DAO governance? I need to verify they are over 18 and hold at least 100 governance tokens."
@@ -140,29 +142,50 @@ export default function DemoPage() {
     <div className="flex min-h-screen flex-col">
       <DemoHeader onReset={handleReset} />
       <main className="mx-auto flex w-full max-w-4xl flex-col gap-6 p-6">
-        <ScenarioSelector active={scenario} onSelect={handleScenario} />
-        <RequestPanel
-          requestText={requestText}
-          onSubmit={handleSubmit}
-          loading={loading}
-        />
+        {!address ? (
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center">
+            <div className="mb-4 text-3xl">🔑</div>
+            <h2 className="text-lg font-semibold mb-2">Connect your wallet</h2>
+            <p className="text-sm text-muted mb-6 max-w-md">
+              Connect your wallet to authorize the agent. You will sign
+              <span className="text-white"> one message</span> to set up a session key
+              — after that, Minima handles everything without popups.
+            </p>
+            <button
+              onClick={connect}
+              disabled={isConnecting}
+              className="inline-flex items-center px-6 py-3 text-sm font-semibold bg-accent text-black rounded-xl hover:bg-teal-400 transition-all disabled:opacity-50"
+            >
+              {isConnecting ? "Connecting..." : "Connect wallet"}
+            </button>
+          </div>
+        ) : (
+          <>
+            <ScenarioSelector active={scenario} onSelect={handleScenario} />
+            <RequestPanel
+              requestText={requestText}
+              onSubmit={handleSubmit}
+              loading={loading}
+            />
 
-        {stage !== "idle" && (
-          <FlowTimeline
-            stage={stage}
-            reasonResult={reasonResult}
-            reasonLoading={reasonLoading}
-            accepted={accepted}
-            onAcceptCounter={handleAcceptCounter}
-            showCounter={showCounter}
-            proofResult={proofResult}
-            proofLoading={proofLoading}
-            actionResult={actionResult}
-            actionLoading={actionLoading}
-          />
+            {stage !== "idle" && (
+              <FlowTimeline
+                stage={stage}
+                reasonResult={reasonResult}
+                reasonLoading={reasonLoading}
+                accepted={accepted}
+                onAcceptCounter={handleAcceptCounter}
+                showCounter={showCounter}
+                proofResult={proofResult}
+                proofLoading={proofLoading}
+                actionResult={actionResult}
+                actionLoading={actionLoading}
+              />
+            )}
+
+            <AuditLog refreshKey={auditLogKey} />
+          </>
         )}
-
-        <AuditLog refreshKey={auditLogKey} />
       </main>
     </div>
   );
