@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
 
     const proof = await generateProof(ageThreshold, tokenThreshold);
 
-    insertEntry({
+    await insertEntry({
       timestamp: new Date().toISOString(),
       request: request || "",
       scenario: request?.includes("email") ? "overbroad" : "legitimate",

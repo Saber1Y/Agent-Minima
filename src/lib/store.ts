@@ -1,9 +1,3 @@
-import Database from "better-sqlite3";
-import path from "path";
-import fs from "fs";
-
-const DB_PATH = path.join(process.cwd(), "data", "audit.db");
-
 export interface AuditEntry {
   id?: number;
   timestamp: string;
@@ -15,43 +9,44 @@ export interface AuditEntry {
   txHash: string | null;
 }
 
-let db: Database.Database | null = null;
+let memoryStore: AuditEntry[] = [];
+let nextId = 1;
 
-function getDb(): Database.Database {
-  if (!db) {
-    const dir = path.dirname(DB_PATH);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+function isKvConfigured(): boolean {
+  return !!process.env.KV_URL;
+}
 
-    db = new Database(DB_PATH);
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS audit (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timestamp TEXT NOT NULL,
-        request TEXT NOT NULL,
-        scenario TEXT NOT NULL DEFAULT '',
-        decision TEXT NOT NULL,
-        disclosedClaims TEXT NOT NULL DEFAULT '',
-        proofHash TEXT,
-        txHash TEXT
-      )
-    `);
+function getKv() {
+  return import("@vercel/kv").then((m) => m.kv);
+}
+
+const KV_KEY = "audit:entries";
+
+export async function insertEntry(entry: Omit<AuditEntry, "id">): Promise<AuditEntry> {
+  const full: AuditEntry = { id: nextId++, ...entry };
+  if (isKvConfigured()) {
+    const kv = await getKv();
+    await kv.lpush(KV_KEY, full);
+  } else {
+    memoryStore.unshift(full);
   }
-  return db;
+  return full;
 }
 
-export function insertEntry(entry: Omit<AuditEntry, "id">): AuditEntry {
-  const stmt = getDb().prepare(`
-    INSERT INTO audit (timestamp, request, scenario, decision, disclosedClaims, proofHash, txHash)
-    VALUES (@timestamp, @request, @scenario, @decision, @disclosedClaims, @proofHash, @txHash)
-  `);
-  const result = stmt.run(entry);
-  return { id: Number(result.lastInsertRowid), ...entry };
+export async function getAllEntries(): Promise<AuditEntry[]> {
+  if (isKvConfigured()) {
+    const kv = await getKv();
+    return (await kv.lrange(KV_KEY, 0, -1)) as AuditEntry[];
+  }
+  return [...memoryStore];
 }
 
-export function getAllEntries(): AuditEntry[] {
-  return getDb().prepare("SELECT * FROM audit ORDER BY id DESC").all() as AuditEntry[];
-}
-
-export function clearEntries(): void {
-  getDb().prepare("DELETE FROM audit").run();
+export async function clearEntries(): Promise<void> {
+  if (isKvConfigured()) {
+    const kv = await getKv();
+    await kv.del(KV_KEY);
+  } else {
+    memoryStore = [];
+    nextId = 1;
+  }
 }

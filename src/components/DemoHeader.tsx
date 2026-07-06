@@ -20,6 +20,7 @@ export default function DemoHeader({
         >
           ← Back
         </Link>
+        <img src="/logo.svg" alt="" className="h-5 w-5" />
         <h1 className="font-sans text-lg font-semibold tracking-tight">
           Minima
           <span className="ml-1.5 text-xs font-normal text-muted">Demo</span>

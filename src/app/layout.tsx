@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   title: "Minima — Zero-Knowledge Disclosure Agent",
   description:
     "Prove just enough. Reveal nothing else. Minima decides the minimum data a request needs, proves it with ZK, and acts on your behalf.",
+  icons: { icon: "/favicon.svg" },
   openGraph: {
     title: "Minima — ZK Disclosure Agent",
     description:

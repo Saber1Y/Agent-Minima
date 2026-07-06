@@ -3,7 +3,7 @@ import { getAllEntries } from "@/lib/store";
 
 export async function GET() {
   try {
-    const entries = getAllEntries().map((e) => ({
+    const entries = (await getAllEntries()).map((e) => ({
       ...e,
       disclosedClaims: e.disclosedClaims ? e.disclosedClaims.split(", ") : [],
     }));
