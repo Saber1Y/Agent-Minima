@@ -30,7 +30,7 @@ export async function executeWithProof(
   const account = new ethers.Contract(accountAddress, AGENT_ACCOUNT_ABI, signer);
 
   const tx = await account.executeWithProof(
-    { proofData, publicInputs },
+    [proofData, publicInputs],
     target,
     data
   );
@@ -42,4 +42,12 @@ export async function executeWithProof(
     explorerUrl: `https://sepolia.basescan.org/tx/${receipt.hash}`,
     functionCalled: "executeWithProof",
   };
+}
+
+export async function getBalanceOf(contractAddress: string, userAddress: string): Promise<string> {
+  const provider = new ethers.JsonRpcProvider(RPC_URL);
+  const abi = ["function balanceOf(address) view returns (uint256)"];
+  const contract = new ethers.Contract(contractAddress, abi, provider);
+  const balance = await contract.balanceOf(userAddress);
+  return ethers.formatUnits(balance, 18);
 }

@@ -77,17 +77,24 @@ export default function DemoPage() {
             publicInputs: proofData.publicInputs,
           }),
         });
-        const actionData: ActionResult = await actionRes.json();
-        addLog(
-          "action",
-          `Tx confirmed  ${actionData.txHash}  (${actionData.functionCalled})`
-        );
-        addLog("system", "Done — session audit recorded.");
+        const actionData = await actionRes.json();
+        if (actionRes.ok) {
+          addLog(
+            "action",
+            `Tx confirmed  ${actionData.txHash}  (${actionData.functionCalled})`,
+          );
+          if (actionData.balance) {
+            addLog("system", `Token balance: ${actionData.balance} MGT`);
+          }
+          addLog("system", "Done — session audit recorded.");
+        } else {
+          addLog("error", `On-chain execution failed: ${actionData.error}`);
+        }
       } catch (err) {
         addLog("error", `Proof/Action failed: ${err}`);
       }
     },
-    [addLog]
+    [addLog],
   );
 
   const handleSend = useCallback(
@@ -121,14 +128,14 @@ export default function DemoPage() {
           if (data.minimalClaims.length > 0) {
             addLog(
               "reason",
-              `Counter-offer: prove ${data.minimalClaims.join(" + ")} only`
+              `Counter-offer: prove ${data.minimalClaims.join(" + ")} only`,
             );
           }
           addLog(
             "warn",
             `Request rejected — ${data.excessiveClaims.length} excessive claim${
               data.excessiveClaims.length !== 1 ? "s" : ""
-            }`
+            }`,
           );
           setShowCounterOffer(true);
         } else {
@@ -141,7 +148,7 @@ export default function DemoPage() {
 
       setLoading(false);
     },
-    [addLog, proveAndAct]
+    [addLog, proveAndAct],
   );
 
   const handleAcceptCounter = useCallback(async () => {
@@ -170,7 +177,6 @@ export default function DemoPage() {
         />
         <main className="flex flex-1 items-center justify-center p-6">
           <div className="flex flex-col items-center justify-center rounded-2xl border border-border bg-card p-12 text-center max-w-md">
-            <div className="mb-4 text-3xl">🔑</div>
             <h2 className="font-sans text-lg font-semibold mb-2">
               Connect your wallet
             </h2>
