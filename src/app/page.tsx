@@ -66,23 +66,97 @@ function Hero() {
       <div className="hero-gradient" />
       <div className="hero-grid absolute inset-0 opacity-30" />
 
-      <div className="absolute inset-0 flex items-center justify-center">
-        <svg className="absolute w-full h-full opacity-[0.04]" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        {/* Circuit grid lines */}
+        <svg className="absolute w-full h-full opacity-[0.03]" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
           <g className="circuit-line" stroke="#2dd4bf" strokeWidth="0.5" fill="none">
-            <path d="M100,100 L200,100 L250,150 L250,300 L300,350 L400,350" />
-            <path d="M500,500 L500,400 L450,350 L450,250 L500,200 L600,200" />
-            <path d="M200,400 L250,350 L350,350 L400,300" />
-            <path d="M600,150 L550,150 L500,200 L500,300 L450,350" />
-            <path d="M150,500 L200,450 L300,450 L350,400" />
+            <path d="M50,50 L150,50 L200,100 L200,250 L250,300 L350,300 L400,250" />
+            <path d="M450,550 L450,450 L400,400 L400,300 L450,250 L550,250 L600,200" />
+            <path d="M150,450 L200,400 L300,400 L350,350" />
+            <path d="M650,100 L600,100 L550,150 L550,250 L500,300" />
+            <path d="M100,550 L150,500 L250,500 L300,450 L350,450" />
+            <path d="M300,100 L350,150 L350,200 L400,250" />
+            <path d="M600,450 L550,450 L500,400 L450,400" />
           </g>
-          <g fill="#2dd4bf" opacity="0.3">
-            <circle cx="100" cy="100" r="2" />
-            <circle cx="400" cy="350" r="2" />
-            <circle cx="500" cy="500" r="2" />
-            <circle cx="600" cy="200" r="2" />
-            <circle cx="200" cy="400" r="2" />
+          <g fill="#2dd4bf" opacity="0.25">
+            <circle cx="50" cy="50" r="2" />
+            <circle cx="400" cy="250" r="2" />
+            <circle cx="450" cy="550" r="2" />
+            <circle cx="650" cy="100" r="2" />
+            <circle cx="100" cy="550" r="2" />
+            <circle cx="300" cy="100" r="1.5" />
+            <circle cx="600" cy="450" r="1.5" />
           </g>
         </svg>
+
+        {/* Rotating wireframe ring */}
+        <svg className="absolute w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] opacity-[0.06]" viewBox="0 0 400 400" fill="none">
+          <g className="hero-ring">
+            <ellipse cx="200" cy="200" rx="180" ry="60" stroke="#2dd4bf" strokeWidth="1" />
+            <ellipse cx="200" cy="200" rx="60" ry="180" stroke="#2dd4bf" strokeWidth="1" transform="rotate(30 200 200)" />
+            <ellipse cx="200" cy="200" rx="180" ry="60" stroke="#2dd4bf" strokeWidth="0.5" transform="rotate(60 200 200)" opacity="0.5" />
+          </g>
+          <g className="hero-ring-inner">
+            <ellipse cx="200" cy="200" rx="120" ry="40" stroke="#2dd4bf" strokeWidth="0.8" opacity="0.4" />
+            <ellipse cx="200" cy="200" rx="40" ry="120" stroke="#2dd4bf" strokeWidth="0.8" opacity="0.4" transform="rotate(-30 200 200)" />
+          </g>
+        </svg>
+
+        {/* Floating particles */}
+        <div
+          className="particle"
+          style={{
+            width: 3, height: 3, background: "#2dd4bf", left: "15%", top: "25%",
+            "--duration": "8s", "--delay": "0s",
+            "--y1": "-20px", "--x1": "15px", "--y2": "10px", "--x2": "-25px", "--y3": "-30px", "--x3": "20px",
+            "--opacity-start": "0.2", "--opacity-mid": "0.5",
+          } as React.CSSProperties}
+        />
+        <div
+          className="particle"
+          style={{
+            width: 2, height: 2, background: "#2dd4bf", left: "75%", top: "60%",
+            "--duration": "12s", "--delay": "1s",
+            "--y1": "-30px", "--x1": "-10px", "--y2": "20px", "--x2": "30px", "--y3": "-15px", "--x3": "-20px",
+            "--opacity-start": "0.15", "--opacity-mid": "0.4",
+          } as React.CSSProperties}
+        />
+        <div
+          className="particle"
+          style={{
+            width: 4, height: 4, background: "#2dd4bf", left: "50%", top: "80%",
+            "--duration": "10s", "--delay": "0.5s",
+            "--y1": "-25px", "--x1": "20px", "--y2": "15px", "--x2": "-15px", "--y3": "-35px", "--x3": "10px",
+            "--opacity-start": "0.1", "--opacity-mid": "0.35",
+          } as React.CSSProperties}
+        />
+        <div
+          className="particle"
+          style={{
+            width: 2, height: 2, background: "#2dd4bf", left: "25%", top: "70%",
+            "--duration": "15s", "--delay": "2s",
+            "--y1": "-15px", "--x1": "-20px", "--y2": "25px", "--x2": "10px", "--y3": "-20px", "--x3": "-30px",
+            "--opacity-start": "0.2", "--opacity-mid": "0.5",
+          } as React.CSSProperties}
+        />
+        <div
+          className="particle"
+          style={{
+            width: 3, height: 3, background: "#2dd4bf", left: "85%", top: "30%",
+            "--duration": "9s", "--delay": "0.8s",
+            "--y1": "-20px", "--x1": "10px", "--y2": "10px", "--x2": "-30px", "--y3": "-25px", "--x3": "15px",
+            "--opacity-start": "0.12", "--opacity-mid": "0.4",
+          } as React.CSSProperties}
+        />
+        <div
+          className="particle"
+          style={{
+            width: 1.5, height: 1.5, background: "#2dd4bf", left: "10%", top: "45%",
+            "--duration": "11s", "--delay": "1.5s",
+            "--y1": "-25px", "--x1": "25px", "--y2": "15px", "--x2": "-10px", "--y3": "-30px", "--x3": "20px",
+            "--opacity-start": "0.18", "--opacity-mid": "0.45",
+          } as React.CSSProperties}
+        />
       </div>
 
       <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">

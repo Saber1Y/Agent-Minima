@@ -44,13 +44,66 @@ body {
 
 .circuit-line {
   stroke-dasharray: 4 4;
-  animation: dashMove 20s linear infinite;
+  animation: dashMove 30s linear infinite;
 }
 
 @keyframes dashMove {
   to {
     stroke-dashoffset: -80;
   }
+}
+
+.hero-ring {
+  animation: ringRotate 40s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes ringRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-ring-inner {
+  animation: ringRotateInner 25s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes ringRotateInner {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  animation: particleFloat var(--duration) ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+@keyframes particleFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: var(--opacity-start, 0.3);
+  }
+  25% {
+    transform: translateY(var(--y1, -30px)) translateX(var(--x1, 20px)) scale(1.1);
+    opacity: var(--opacity-mid, 0.6);
+  }
+  50% {
+    transform: translateY(var(--y2, -10px)) translateX(var(--x2, -10px)) scale(0.9);
+    opacity: var(--opacity-start, 0.3);
+  }
+  75% {
+    transform: translateY(var(--y3, -40px)) translateX(var(--x3, 30px)) scale(1.05);
+    opacity: var(--opacity-mid, 0.5);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
 
 .glow-dot {

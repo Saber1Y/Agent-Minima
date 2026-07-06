@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Sora, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import PrivyWrapper from "@/components/PrivyWrapper";
+import CursorGlow from "@/components/CursorGlow";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -30,7 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${sora.variable} ${jetbrainsMono.variable}`}>
       <body className="bg-surface text-white antialiased font-sans">
-        <PrivyWrapper>{children}</PrivyWrapper>
+        <PrivyWrapper>
+          {children}
+          <CursorGlow />
+        </PrivyWrapper>
       </body>
     </html>
   );
