@@ -14,6 +14,7 @@ export interface LogEntry {
   timestamp: string;
   type: LogType;
   message: string;
+  href?: string;
 }
 
 const typeStyles: Record<LogType, string> = {
@@ -57,7 +58,18 @@ export default function TerminalTrace({ entries }: { entries: LogEntry[] }) {
             {new Date(e.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
           </span>
           <span className="shrink-0 w-4">{typeDots[e.type]}</span>
-          <span className="whitespace-pre-wrap break-words">{e.message}</span>
+          {e.href ? (
+            <a
+              href={e.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="whitespace-pre-wrap break-words underline underline-offset-2 decoration-border hover:decoration-accent transition-colors"
+            >
+              {e.message}
+            </a>
+          ) : (
+            <span className="whitespace-pre-wrap break-words">{e.message}</span>
+          )}
         </div>
       ))}
     </div>

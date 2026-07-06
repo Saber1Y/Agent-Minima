@@ -43,11 +43,11 @@ export default function DemoPage() {
 
   const nextId = useRef(0);
 
-  const addLog = useCallback((type: LogType, message: string) => {
+  const addLog = useCallback((type: LogType, message: string, href?: string) => {
     const id = nextId.current++;
     setEntries((prev) => [
       ...prev,
-      { id, timestamp: new Date().toISOString(), type, message },
+      { id, timestamp: new Date().toISOString(), type, message, href },
     ]);
   }, []);
 
@@ -82,6 +82,7 @@ export default function DemoPage() {
           addLog(
             "action",
             `Tx confirmed  ${actionData.txHash}  (${actionData.functionCalled})`,
+            actionData.explorerUrl,
           );
           if (actionData.balance) {
             addLog("system", `Token balance: ${actionData.balance} MGT`);
